@@ -4,8 +4,7 @@ from typing import List, Optional
 from homeassistant.components.climate import ClimateEntity
 from homeassistant.const import (
     ATTR_TEMPERATURE,
-    TEMP_FAHRENHEIT,
-    TEMP_CELSIUS,
+    UnitOfTemperature,
 )
 from homeassistant.components.climate.const import (
     HVAC_MODE_FAN_ONLY,
@@ -83,11 +82,11 @@ class GeClimate(GeEntity, ClimateEntity):
     @property
     def temperature_unit(self):
         #appears to always be Fahrenheit internally, hardcode this
-        return TEMP_FAHRENHEIT
+        return UnitOfTemperature.FAHRENHEIT
         #measurement_system = self.appliance.get_erd_value(ErdCode.TEMPERATURE_UNIT)
         #if measurement_system == ErdMeasurementUnits.METRIC:
-        #    return TEMP_CELSIUS
-        #return TEMP_FAHRENHEIT
+        #    return UnitOfTemperature.CELSIUS
+        #return UnitOfTemperature.FAHRENHEIT
 
     @property
     def supported_features(self):
@@ -185,7 +184,7 @@ class GeClimate(GeEntity, ClimateEntity):
         await self.appliance.async_set_erd_value(self.power_status_erd_code, ErdOnOff.OFF)
 
     def _convert_temp(self, temperature_f: int):
-        if self.temperature_unit == TEMP_FAHRENHEIT:
+        if self.temperature_unit == UnitOfTemperature.FAHRENHEIT:
             return float(temperature_f)
         else:
             return (temperature_f - 32.0) * (5/9)
